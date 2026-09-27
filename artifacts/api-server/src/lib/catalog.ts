@@ -1,4 +1,4 @@
-import { count } from "drizzle-orm";
+import { and, count, eq, like } from "drizzle-orm";
 import { db, productsTable, type InsertProduct } from "@workspace/db";
 
 export const sampleProducts: InsertProduct[] = [
@@ -13,7 +13,7 @@ export const sampleProducts: InsertProduct[] = [
     sizes: ["S", "M", "L", "XL", "XXL"],
     color: "Marigold",
     fabric: "Rayon",
-    imageUrl: "https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?auto=format&fit=crop&w=1200&q=85",
+    imageUrl: "/products/gulmohar-printed-kurti.jpg",
     featured: true,
   },
   {
@@ -27,7 +27,7 @@ export const sampleProducts: InsertProduct[] = [
     sizes: ["S", "M", "L", "XL"],
     color: "Dusty Mauve",
     fabric: "Cotton Slub",
-    imageUrl: "https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=1200&q=85",
+    imageUrl: "/products/mauve-everyday-kurti.jpg",
     featured: true,
   },
   {
@@ -41,7 +41,7 @@ export const sampleProducts: InsertProduct[] = [
     sizes: ["S", "M", "L", "XL", "XXL"],
     color: "Indigo",
     fabric: "Cotton Flex",
-    imageUrl: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=1200&q=85",
+    imageUrl: "/products/indigo-loom-cord-set.jpg",
     featured: true,
   },
   {
@@ -55,7 +55,7 @@ export const sampleProducts: InsertProduct[] = [
     sizes: ["M", "L", "XL", "XXL"],
     color: "Rosewood",
     fabric: "Cotton",
-    imageUrl: "https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=1200&q=85",
+    imageUrl: "/products/rosewood-night-suit.jpg",
     featured: false,
   },
   {
@@ -69,7 +69,7 @@ export const sampleProducts: InsertProduct[] = [
     sizes: ["S", "M", "L", "XL"],
     color: "Sandstone",
     fabric: "Viscose",
-    imageUrl: "https://images.unsplash.com/photo-1485230895905-ec40ba36b9bc?auto=format&fit=crop&w=1200&q=85",
+    imageUrl: "/products/sandstone-long-kurti.jpg",
     featured: false,
   },
   {
@@ -83,7 +83,7 @@ export const sampleProducts: InsertProduct[] = [
     sizes: ["S", "M", "L", "XL"],
     color: "Petal Pink",
     fabric: "Cotton Rayon",
-    imageUrl: "https://images.unsplash.com/photo-1496747611176-843222e1e57c?auto=format&fit=crop&w=1200&q=85",
+    imageUrl: "/products/petal-pink-short-kurti.jpg",
     featured: false,
   },
 ];
@@ -92,5 +92,18 @@ export async function ensureCatalogSeeded(): Promise<void> {
   const [{ value }] = await db.select({ value: count() }).from(productsTable);
   if (value === 0) {
     await db.insert(productsTable).values(sampleProducts);
+    return;
+  }
+
+  for (const sample of sampleProducts) {
+    await db
+      .update(productsTable)
+      .set({ imageUrl: sample.imageUrl })
+      .where(
+        and(
+          eq(productsTable.slug, sample.slug),
+          like(productsTable.imageUrl, "https://images.unsplash.com%"),
+        ),
+      );
   }
 }
