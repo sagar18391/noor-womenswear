@@ -1,0 +1,96 @@
+import { count } from "drizzle-orm";
+import { db, productsTable, type InsertProduct } from "@workspace/db";
+
+export const sampleProducts: InsertProduct[] = [
+  {
+    slug: "gulmohar-printed-kurti",
+    name: "Gulmohar Printed Kurti",
+    category: "Kurtis",
+    price: 899,
+    originalPrice: 1299,
+    description: "A breezy printed kurti made for bright mornings and easy plans.",
+    details: ["Straight fit", "Three-quarter sleeves", "Side slits", "Machine washable"],
+    sizes: ["S", "M", "L", "XL", "XXL"],
+    color: "Marigold",
+    fabric: "Rayon",
+    imageUrl: "https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?auto=format&fit=crop&w=1200&q=85",
+    featured: true,
+  },
+  {
+    slug: "mauve-everyday-kurti",
+    name: "Mauve Everyday Kurti",
+    category: "Daily Wear",
+    price: 749,
+    originalPrice: 999,
+    description: "Soft colour, relaxed comfort, and a shape that works from desk to dinner.",
+    details: ["Comfort fit", "Button placket", "Pocket detail", "Easy-care fabric"],
+    sizes: ["S", "M", "L", "XL"],
+    color: "Dusty Mauve",
+    fabric: "Cotton Slub",
+    imageUrl: "https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=1200&q=85",
+    featured: true,
+  },
+  {
+    slug: "indigo-loom-cord-set",
+    name: "Indigo Loom Cord Set",
+    category: "Cord Sets",
+    price: 1199,
+    originalPrice: 1699,
+    description: "An effortless co-ord in a deep indigo weave for days you want to look put together.",
+    details: ["Top and trouser set", "Elasticated waist", "Relaxed silhouette", "Colourfast"],
+    sizes: ["S", "M", "L", "XL", "XXL"],
+    color: "Indigo",
+    fabric: "Cotton Flex",
+    imageUrl: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=1200&q=85",
+    featured: true,
+  },
+  {
+    slug: "rosewood-night-suit",
+    name: "Rosewood Night Suit",
+    category: "Night Suits",
+    price: 999,
+    originalPrice: 1399,
+    description: "Lightweight, soft, and made for slower evenings at home.",
+    details: ["Two-piece set", "Relaxed fit", "Full-length bottoms", "Breathable finish"],
+    sizes: ["M", "L", "XL", "XXL"],
+    color: "Rosewood",
+    fabric: "Cotton",
+    imageUrl: "https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=1200&q=85",
+    featured: false,
+  },
+  {
+    slug: "sandstone-long-kurti",
+    name: "Sandstone Long Kurti",
+    category: "Long Kurtis",
+    price: 1099,
+    originalPrice: 1499,
+    description: "A longline layer with a quiet print and plenty of movement.",
+    details: ["Longline cut", "Full sleeves", "Printed yoke", "Straight hem"],
+    sizes: ["S", "M", "L", "XL"],
+    color: "Sandstone",
+    fabric: "Viscose",
+    imageUrl: "https://images.unsplash.com/photo-1485230895905-ec40ba36b9bc?auto=format&fit=crop&w=1200&q=85",
+    featured: false,
+  },
+  {
+    slug: "petal-pink-short-kurti",
+    name: "Petal Pink Short Kurti",
+    category: "Short Kurtis",
+    price: 699,
+    originalPrice: 899,
+    description: "A playful short kurti that pairs easily with jeans, palazzos, or your favourite skirt.",
+    details: ["Short length", "V-neckline", "Three-quarter sleeves", "Soft hand feel"],
+    sizes: ["S", "M", "L", "XL"],
+    color: "Petal Pink",
+    fabric: "Cotton Rayon",
+    imageUrl: "https://images.unsplash.com/photo-1496747611176-843222e1e57c?auto=format&fit=crop&w=1200&q=85",
+    featured: false,
+  },
+];
+
+export async function ensureCatalogSeeded(): Promise<void> {
+  const [{ value }] = await db.select({ value: count() }).from(productsTable);
+  if (value === 0) {
+    await db.insert(productsTable).values(sampleProducts);
+  }
+}
