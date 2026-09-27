@@ -1,0 +1,28 @@
+kind = "web"
+previewPath = "/"
+title = "Noor Womenswear"
+description = "A mobile-friendly women’s clothing storefront for browsing kurtis, night suits, cord sets, and daily wear, with COD ordering and WhatsApp or Gmail order handoff."
+version = "1.0.0"
+id = "artifacts/noor-womenswear"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 21261
+
+[services.development]
+run = "pnpm --filter @workspace/noor-womenswear run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/noor-womenswear", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/noor-womenswear/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "21261"
+BASE_PATH = "/"
